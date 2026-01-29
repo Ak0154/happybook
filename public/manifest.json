@@ -1,0 +1,9 @@
+{
+  "name": "Happy Book",
+  "short_name": "HappyBook",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f9f9",
+  "theme_color": "#644a40",
+  "icons": []
+}
