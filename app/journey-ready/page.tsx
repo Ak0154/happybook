@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 export default function JourneyReadyPage() {
   return (
     <main className="page">
@@ -7,7 +8,7 @@ export default function JourneyReadyPage() {
         <h1>Your Personalized Journey Is Ready!</h1>
         <p>We have crafted a unique learning path just for you, powered by AI to help you stay ahead.</p>
         <div className="actions">
-          <button className="primary">Begin My Journey</button>
+          <Link href="/dashboard" className="primary">Begin My Journey</Link>
           <button className="ghost">Preview My Plan</button>
         </div>
       </section>
@@ -19,7 +20,7 @@ export default function JourneyReadyPage() {
         h1 { margin: 0; font-size: clamp(26px, 4vw, 32px); }
         p { margin: 0; color: var(--on-surface-variant); line-height: 1.5; }
         .actions { display: grid; gap: 12px; }
-        .primary { background: var(--primary); color: var(--on-primary); border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 24px rgba(100,74,64,0.25); }
+        .primary { background: var(--primary); color: var(--on-primary); border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 24px rgba(100,74,64,0.25); text-decoration: none; display: inline-block; }
         .ghost { background: transparent; color: var(--on-surface-variant); border: none; padding: 10px; font-weight: 700; text-decoration: underline; cursor: pointer; }
       `}</style>
     </main>
