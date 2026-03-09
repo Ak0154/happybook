@@ -1,5 +1,8 @@
 "use client";
 
+import { Progress } from "@/components/animate-ui/components/radix/progress";
+import { Plus, MoreVertical, BookOpen } from "lucide-react";
+
 const subjects = [
     { id: 1, name: "Mathematics", progress: 75, nextLesson: "Integration Rules", icon: "📐" },
     { id: 2, name: "Physics", progress: 45, nextLesson: "Quantum Mechanics", icon: "⚛️" },
@@ -10,108 +13,52 @@ const subjects = [
 
 export default function SubjectsPage() {
     return (
-        <div className="subjects-page">
-            <header className="page-header">
-                <h1>My Subjects</h1>
-                <button className="primary-btn">+ Enrol New</button>
+        <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto">
+            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">My Subjects</h1>
+                  <p className="text-zinc-500 text-sm mt-1">Manage your active coursework and track your progress.</p>
+                </div>
+                <button className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg font-medium shadow-sm hover:opacity-90 transition-opacity">
+                    <Plus className="w-4 h-4" />
+                    Enrol New
+                </button>
             </header>
 
-            <div className="subjects-grid">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {subjects.map((sub) => (
-                    <article key={sub.id} className="subject-card">
-                        <div className="card-top">
-                            <div className="icon-box">{sub.icon}</div>
-                            <div className="more-opt">•••</div>
+                    <article key={sub.id} className="group flex flex-col gap-6 bg-card border border-border/50 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 dark:bg-zinc-900/50 dark:backdrop-blur-xl">
+                        <div className="flex justify-between items-start">
+                            <div className="w-14 h-14 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-2xl shadow-inner">
+                                {sub.icon}
+                            </div>
+                            <button className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors p-2 -mr-2 -mt-2">
+                                <MoreVertical className="w-5 h-5" />
+                            </button>
                         </div>
 
-                        <div className="card-info">
-                            <h3>{sub.name}</h3>
-                            <p className="next">Next: {sub.nextLesson}</p>
+                        <div className="flex flex-col gap-1">
+                            <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">{sub.name}</h3>
+                            <p className="text-sm text-zinc-500 font-medium flex items-center gap-1.5">
+                                <BookOpen className="w-3.5 h-3.5" />
+                                Next: {sub.nextLesson}
+                            </p>
                         </div>
 
-                        <div className="progress-section">
-                            <div className="progress-labels">
+                        <div className="flex flex-col gap-2 mt-auto">
+                            <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                                 <span>Progress</span>
                                 <span>{sub.progress}%</span>
                             </div>
-                            <div className="progress-bar">
-                                <div className="fill" style={{ width: `${sub.progress}%` }} />
-                            </div>
+                            <Progress value={sub.progress} className="h-2" />
                         </div>
 
-                        <button className="continue-btn">Continue Learning</button>
+                        <button className="w-full mt-2 py-2.5 rounded-xl border border-border bg-transparent text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                            Continue Learning
+                        </button>
                     </article>
                 ))}
             </div>
-
-            <style jsx>{`
-        .subjects-page { display: flex; flex-direction: column; gap: 32px; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; }
-        .page-header h1 { margin: 0; font-size: 28px; }
-        
-        .primary-btn {
-          background: var(--primary);
-          color: var(--on-primary);
-          border: none;
-          padding: 12px 20px;
-          border-radius: 12px;
-          font-weight: 700;
-          cursor: pointer;
-          box-shadow: 0 4px 12px rgba(100,74,64,0.3);
-        }
-
-        .subjects-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 24px;
-        }
-
-        .subject-card {
-          background: var(--card);
-          padding: 24px;
-          border-radius: 20px;
-          box-shadow: var(--shadow);
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          border: 1px solid rgba(0,0,0,0.03);
-          transition: transform 0.2s;
-        }
-        .subject-card:hover { transform: translateY(-4px); }
-
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-        .icon-box {
-          width: 56px; height: 56px;
-          border-radius: 16px;
-          background: var(--surface);
-          display: grid;
-          place-items: center;
-          font-size: 28px;
-          border: 1px solid rgba(0,0,0,0.05);
-        }
-        .more-opt { color: var(--on-surface-variant); font-weight: bold; cursor: pointer; letter-spacing: 1px; }
-
-        .card-info h3 { margin: 0 0 4px; font-size: 20px; }
-        .card-info .next { margin: 0; font-size: 14px; color: var(--on-surface-variant); }
-
-        .progress-section { display: grid; gap: 8px; }
-        .progress-labels { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
-        .progress-bar { height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; }
-        .fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.5s ease-out; }
-
-        .continue-btn {
-          width: 100%;
-          padding: 12px;
-          border: 1px solid rgba(0,0,0,0.1);
-          background: transparent;
-          border-radius: 12px;
-          font-weight: 600;
-          color: var(--on-surface);
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .continue-btn:hover { background: var(--surface); border-color: rgba(0,0,0,0.2); }
-      `}</style>
         </div>
     );
 }

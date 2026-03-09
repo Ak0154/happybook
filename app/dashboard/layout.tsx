@@ -1,193 +1,419 @@
 "use client";
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import * as React from 'react';
+import { usePathname } from 'next/navigation';
 
-export default function DashboardLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    const pathname = usePathname();
-    const router = useRouter();
-    const [activePath, setActivePath] = useState(pathname);
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarRail,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
+  SidebarMenuAction,
+} from '@/components/ui/sidebar';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AudioWaveform,
+  BadgeCheck,
+  Bell,
+  BookOpen,
+  Bot,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  Folder,
+  Forward,
+  Frame,
+  GalleryVerticalEnd,
+  LogOut,
+  Map,
+  MoreHorizontal,
+  PieChart,
+  Plus,
+  Settings2,
+  Sparkles,
+  SquareTerminal,
+  Trash2,
+} from 'lucide-react';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/ui/avatar';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-    useEffect(() => {
-        setActivePath(pathname);
-    }, [pathname]);
+const DATA = {
+  user: {
+    name: 'Student',
+    email: 'student@example.com',
+    avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+  },
+  teams: [
+    {
+      name: 'Happy Book',
+      logo: BookOpen,
+      plan: 'Student Plan',
+    },
+    {
+      name: 'Happy Book Pro',
+      logo: Sparkles,
+      plan: 'Upgrade Now',
+    },
+  ],
+  navMain: [
+    {
+      title: 'Platform',
+      url: '/dashboard',
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        { title: 'Home', url: '/dashboard' },
+        { title: 'Subjects', url: '/dashboard/subjects' },
+        { title: 'Calendar', url: '/dashboard/calendar' },
+        { title: 'AI Tutor', url: '/dashboard/tutor' },
+      ],
+    },
+    {
+      title: 'Saved Materials',
+      url: '#',
+      icon: Folder,
+      items: [
+        { title: 'Summaries', url: '#' },
+        { title: 'Flashcards', url: '#' },
+      ],
+    },
+  ],
+  projects: [
+    { name: 'Biology 101 Midterm', url: '#', icon: Frame },
+    { name: 'History Essay', url: '#', icon: Map },
+    { name: 'Calculus Finals', url: '#', icon: PieChart },
+  ],
+};
 
-    const navItems = [
-        { name: 'Home', href: '/dashboard', icon: '🏠' },
-        { name: 'Subjects', href: '/dashboard/subjects', icon: '📚' },
-        { name: 'Calendar', href: '/dashboard/calendar', icon: '📅' },
-        { name: 'AI Tutor', href: '/dashboard/tutor', icon: '🤖' },
-    ];
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const isMobile = useIsMobile();
+  const pathname = usePathname();
+  const [activeTeam, setActiveTeam] = React.useState(DATA.teams[0]);
 
-    return (
-        <div className="dashboard-shell">
-            <aside className="sidebar">
-                <div className="logo-area">
-                    <div className="logo-icon">🎓</div>
-                    <span className="logo-text">Happy Book</span>
-                </div>
+  // Derive current page name from pathname
+  const getCurrentPageName = () => {
+    switch(pathname) {
+      case '/dashboard/subjects': return 'Subjects';
+      case '/dashboard/calendar': return 'Calendar';
+      case '/dashboard/tutor': return 'AI Tutor';
+      case '/dashboard':
+      default: return 'Home';
+    }
+  }
 
-                <nav className="nav-links">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`nav-item ${activePath === item.href ? 'active' : ''}`}
-                        >
-                            <span className="icon">{item.icon}</span>
-                            <span className="label">{item.name}</span>
-                        </Link>
-                    ))}
-                </nav>
+  if (!activeTeam) return null;
 
-                <div className="sidebar-footer">
-                    <button onClick={() => router.push('/login')} className="logout-btn">
-                        <span className="icon">🚪</span> Logout
-                    </button>
-                </div>
-            </aside>
-
-            <div className="content-area">
-                <header className="top-header">
-                    <div className="breadcrumbs">
-                        {navItems.find(i => i.href === activePath)?.name || 'Dashboard'}
+  return (
+    <SidebarProvider>
+      <Sidebar collapsible="icon" className="border-r border-zinc-800/50">
+        <SidebarHeader>
+          {/* Team Switcher */}
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-white shadow-lg">
+                      <activeTeam.logo className="size-4" />
                     </div>
-                    <div className="user-profile">
-                        <button className="icon-btn">🔔</button>
-                        <div className="avatar">S</div>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold tracking-tight">
+                        {activeTeam.name}
+                      </span>
+                      <span className="truncate text-xs opacity-70">
+                        {activeTeam.plan}
+                      </span>
                     </div>
-                </header>
+                    <ChevronsUpDown className="ml-auto opacity-50" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  align="start"
+                  side={isMobile ? 'bottom' : 'right'}
+                  sideOffset={4}
+                >
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    Plans & Teams
+                  </DropdownMenuLabel>
+                  {DATA.teams.map((team, index) => (
+                    <DropdownMenuItem
+                      key={team.name}
+                      onClick={() => setActiveTeam(team)}
+                      className="gap-2 p-2"
+                    >
+                      <div className="flex size-6 items-center justify-center rounded-sm border">
+                        <team.logo className="size-4 shrink-0" />
+                      </div>
+                      {team.name}
+                      <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="gap-2 p-2">
+                    <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                      <Plus className="size-4" />
+                    </div>
+                    <div className="font-medium text-muted-foreground">
+                      Create Team Account
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          {/* Team Switcher */}
+        </SidebarHeader>
 
-                <main className="scrollable-content">
-                    {children}
-                </main>
-            </div>
+        <SidebarContent>
+          {/* Nav Main */}
+          <SidebarGroup>
+            <SidebarGroupLabel>Application</SidebarGroupLabel>
+            <SidebarMenu>
+              {DATA.navMain.map((item) => (
+                <Collapsible
+                  key={item.title}
+                  asChild
+                  defaultOpen={item.isActive}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton tooltip={item.title}>
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                        <ChevronRight className="ml-auto transition-transform duration-300 group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
+                              <a href={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </a>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+                </Collapsible>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+          {/* Nav Main */}
 
-            <style jsx>{`
-        .dashboard-shell {
-          min-height: 100vh;
-          display: flex;
-          background: var(--background);
-          color: var(--on-surface);
-        }
+          {/* Nav Project */}
+          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+            <SidebarGroupLabel>Quick Workspaces</SidebarGroupLabel>
+            <SidebarMenu>
+              {DATA.projects.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </a>
+                  </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction showOnHover>
+                        <MoreHorizontal />
+                        <span className="sr-only">More</span>
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className="w-48 rounded-lg"
+                      side={isMobile ? 'bottom' : 'right'}
+                      align={isMobile ? 'end' : 'start'}
+                    >
+                      <DropdownMenuItem>
+                        <Folder className="text-muted-foreground" />
+                        <span>View Project</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Forward className="text-muted-foreground" />
+                        <span>Share Project</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Trash2 className="text-muted-foreground" />
+                        <span>Delete Project</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </SidebarMenuItem>
+              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton className="text-sidebar-foreground/70">
+                  <MoreHorizontal className="text-sidebar-foreground/70" />
+                  <span>More</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+          {/* Nav Project */}
+        </SidebarContent>
+        <SidebarFooter>
+          {/* Nav User */}
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage
+                        src={DATA.user.avatar}
+                        alt={DATA.user.name}
+                      />
+                      <AvatarFallback className="rounded-lg">ST</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">
+                        {DATA.user.name}
+                      </span>
+                      <span className="truncate text-xs">
+                        {DATA.user.email}
+                      </span>
+                    </div>
+                    <ChevronsUpDown className="ml-auto size-4" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  side={isMobile ? 'bottom' : 'right'}
+                  align="end"
+                  sideOffset={4}
+                >
+                  <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarImage
+                          src={DATA.user.avatar}
+                          alt={DATA.user.name}
+                        />
+                        <AvatarFallback className="rounded-lg">
+                          ST
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-semibold">
+                          {DATA.user.name}
+                        </span>
+                        <span className="truncate text-xs">
+                          {DATA.user.email}
+                        </span>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <Sparkles />
+                      Upgrade to Pro
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <BadgeCheck />
+                      Account Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <CreditCard />
+                      Billing
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Bell />
+                      Notifications
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <LogOut />
+                    <Link href="/">Log out</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          {/* Nav User */}
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
 
-        .sidebar {
-          width: 260px;
-          background: var(--surface);
-          border-right: 1px solid rgba(0,0,0,0.08);
-          display: flex;
-          flex-direction: column;
-          padding: 24px;
-          position: fixed;
-          top: 0; bottom: 0; left: 0;
-          z-index: 100;
-        }
-
-        .logo-area {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 40px;
-        }
-        .logo-icon {
-          width: 40px; height: 40px;
-          background: rgba(100,74,64,0.1);
-          color: var(--primary);
-          border-radius: 10px;
-          display: grid;
-          place-items: center;
-          font-size: 20px;
-        }
-        .logo-text { font-weight: 700; font-size: 20px; color: var(--on-surface); }
-
-        .nav-links { display: grid; gap: 8px; flex: 1; }
-        .nav-item {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 16px;
-          border-radius: 12px;
-          color: var(--on-surface-variant);
-          font-weight: 600;
-          transition: all 0.2s;
-        }
-        .nav-item:hover { background: rgba(0,0,0,0.04); color: var(--on-surface); }
-        .nav-item.active { background: var(--primary); color: var(--on-primary); }
-        .nav-item .icon { font-size: 18px; }
-
-        .sidebar-footer { border-top: 1px solid rgba(0,0,0,0.08); padding-top: 16px; }
-        .logout-btn {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          text-align: left;
-          padding: 12px 16px;
-          color: var(--error);
-          font-weight: 600;
-          background: transparent;
-          border-radius: 12px;
-          cursor: pointer;
-        }
-        .logout-btn:hover { background: rgba(229,77,46,0.1); }
-
-        .content-area {
-          flex: 1;
-          margin-left: 260px;
-          display: flex;
-          flex-direction: column;
-          height: 100vh;
-        }
-
-        .top-header {
-          height: 72px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 40px;
-          background: var(--surface);
-          position: sticky;
-          top: 0;
-          z-index: 90;
-          border-bottom: 1px solid rgba(0,0,0,0.04);
-        }
-        .breadcrumbs { font-size: 18px; font-weight: 700; color: var(--on-surface); }
-        .user-profile { display: flex; align-items: center; gap: 16px; }
-        .icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 8px; border-radius: 50%; }
-        .icon-btn:hover { background: rgba(0,0,0,0.05); }
-        .avatar {
-          width: 36px; height: 36px;
-          border-radius: 50%;
-          background: var(--primary);
-          color: var(--on-primary);
-          display: grid;
-          place-items: center;
-          font-weight: 700;
-          font-size: 14px;
-        }
-
-        .scrollable-content {
-          flex: 1;
-          overflow-y: auto;
-          overflow-x: hidden;
-          padding: 32px 40px 64px;
-        }
-
-        @media (max-width: 1024px) {
-          .sidebar { width: 80px; padding: 24px 12px; }
-          .content-area { margin-left: 80px; }
-          .logo-text, .label, .logout-btn span:not(.icon) { display: none; }
-          .nav-item, .logout-btn { justify-content: center; padding: 12px; }
-          .logo-area { justify-content: center; }
-          .top-header { padding: 0 24px; }
-          .scrollable-content { padding: 24px; }
-        }
-      `}</style>
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b border-zinc-200 dark:border-zinc-800/50">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Workspace
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{getCurrentPageName()}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 lg:p-8">
+          {children}
         </div>
-    );
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }

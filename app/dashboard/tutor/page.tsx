@@ -1,151 +1,100 @@
 "use client";
 
 import { useState } from 'react';
+import { Send, Bot, User } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function AiTutorPage() {
     const [messages, setMessages] = useState([
         { role: 'assistant', text: "Hello! I'm your AI Tutor. I can help you with math, essay writing, or explaining complex concepts. What are you working on today?" }
     ]);
     const [input, setInput] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
 
     const handleSend = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!input.trim()) return;
+        if (!input.trim() || isTyping) return;
 
-        // Add user message
-        const userMsg = { role: 'user', text: input };
+        const userMsg = { role: 'user', text: input.trim() };
         setMessages(prev => [...prev, userMsg]);
         setInput('');
+        setIsTyping(true);
 
-        // Mock AI response
+        // Mock AI response delay
         setTimeout(() => {
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                text: "That's an interesting question! Let's break it down step by step. First, recall that..."
+                text: "That's an interesting question! Let's break it down step by step. First, consider the core concepts related to your inquiry. What do you think the first step should be?"
             }]);
-        }, 1000);
+            setIsTyping(false);
+        }, 1500);
     };
 
     return (
-        <div className="tutor-shell">
-            <div className="chat-container">
-                <div className="messages-area">
-                    {messages.map((msg, i) => (
-                        <div key={i} className={`message-row ${msg.role}`}>
-                            {msg.role === 'assistant' && <div className="avatar">🤖</div>}
-                            <div className="bubble">
-                                {msg.text}
-                            </div>
+        <div className="flex flex-col h-[calc(100vh-140px)] w-full max-w-5xl mx-auto rounded-3xl border border-border/50 bg-card overflow-hidden shadow-sm">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+                {messages.map((msg, i) => (
+                    <div key={i} className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`}>
+                        <Avatar className="w-10 h-10 border border-border/50 shadow-sm mt-1">
+                            {msg.role === 'assistant' ? (
+                                <AvatarFallback className="bg-primary text-primary-foreground">
+                                    <Bot className="w-5 h-5" />
+                                </AvatarFallback>
+                            ) : (
+                                <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100">
+                                    <User className="w-5 h-5" />
+                                </AvatarFallback>
+                            )}
+                        </Avatar>
+                        
+                        <div className={`px-5 py-3.5 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
+                            msg.role === 'assistant' 
+                                ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-tl-sm border border-border/50' 
+                                : 'bg-primary text-primary-foreground rounded-tr-sm'
+                        }`}>
+                            {msg.text}
                         </div>
-                    ))}
-                </div>
-
-                <form onSubmit={handleSend} className="input-area">
-                    <input
-                        type="text"
-                        placeholder="Ask a question..."
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                    />
-                    <button type="submit" className="send-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
-                </form>
+                    </div>
+                ))}
+                
+                {isTyping && (
+                    <div className="flex gap-4 max-w-[85%] self-start mt-2">
+                        <Avatar className="w-10 h-10 border border-border/50 shadow-sm">
+                            <AvatarFallback className="bg-primary text-primary-foreground">
+                                <Bot className="w-5 h-5" />
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="px-5 py-4 rounded-2xl rounded-tl-sm bg-zinc-100 dark:bg-zinc-800 flex items-center gap-1.5 border border-border/50 shadow-sm">
+                            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.3s]"></span>
+                            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.15s]"></span>
+                            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-bounce"></span>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            <style jsx>{`
-        .tutor-shell {
-          height: calc(100vh - 140px); /* Adjust based on header/padding */
-          display: flex;
-          flex-direction: column;
-        }
-
-        .chat-container {
-          flex: 1;
-          background: var(--card);
-          border-radius: 20px;
-          border: 1px solid rgba(0,0,0,0.03);
-          box-shadow: var(--shadow);
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
-
-        .messages-area {
-          flex: 1;
-          padding: 24px;
-          overflow-y: auto;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .message-row {
-          display: flex;
-          gap: 12px;
-          max-width: 80%;
-        }
-        .message-row.user {
-          align-self: flex-end;
-          flex-direction: row-reverse;
-        }
-        
-        .avatar {
-          width: 32px; height: 32px;
-          border-radius: 50%;
-          background: var(--primary);
-          display: grid;
-          place-items: center;
-          font-size: 18px;
-        }
-
-        .bubble {
-          padding: 12px 18px;
-          border-radius: 16px;
-          line-height: 1.5;
-          font-size: 15px;
-        }
-        .assistant .bubble {
-          background: var(--surface);
-          color: var(--on-surface);
-          border-top-left-radius: 4px;
-        }
-        .user .bubble {
-          background: var(--primary);
-          color: var(--on-primary);
-          border-top-right-radius: 4px;
-        }
-
-        .input-area {
-          padding: 16px;
-          background: var(--surface);
-          border-top: 1px solid rgba(0,0,0,0.05);
-          display: flex;
-          gap: 12px;
-        }
-        .input-area input {
-          flex: 1;
-          padding: 12px 16px;
-          border-radius: 24px;
-          border: 1px solid rgba(0,0,0,0.1);
-          outline: none;
-          font-family: inherit;
-        }
-        .input-area input:focus { border-color: var(--primary); }
-        
-        .send-btn {
-          width: 44px; height: 44px;
-          border-radius: 50%;
-          background: var(--primary);
-          color: var(--on-primary);
-          border: none;
-          display: grid;
-          place-items: center;
-          cursor: pointer;
-          transition: transform 0.2s;
-        }
-        .send-btn:hover { transform: scale(1.05); }
-      `}</style>
+            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-border/50">
+                <form onSubmit={handleSend} className="relative flex items-center w-full max-w-4xl mx-auto">
+                    <input
+                        type="text"
+                        placeholder="Message AI Tutor..."
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        disabled={isTyping}
+                        className="w-full pl-6 pr-14 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-zinc-900 dark:text-zinc-100 disabled:opacity-50"
+                    />
+                    <button 
+                        type="submit" 
+                        disabled={!input.trim() || isTyping}
+                        className="absolute right-2.5 p-2 bg-primary text-primary-foreground rounded-xl shadow-sm hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    >
+                        <Send className="w-5 h-5" />
+                    </button>
+                </form>
+                <p className="text-center text-xs text-zinc-500 mt-3 font-medium">
+                    AI Tutor can make mistakes. Consider verifying important academic facts.
+                </p>
+            </div>
         </div>
     );
 }

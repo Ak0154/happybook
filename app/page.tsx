@@ -2,9 +2,21 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { RadixAccordionDemo } from '@/components/demo/RadixAccordionDemo';
+import { RadixProgressDemo } from '@/components/demo/RadixProgressDemo';
 
 export default function WelcomePage() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [promptText, setPromptText] = useState('');
+
+  const handlePromptSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!promptText.trim()) return;
+    router.push(`/signup?prompt=${encodeURIComponent(promptText.trim())}`);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,9 +69,9 @@ export default function WelcomePage() {
             </p>
 
             <div className="actions">
-              <Link href="/signup" className="btn-hero-primary">
+              <Link href="/signup" className="btn-hero-primary flex flex-row items-center justify-center gap-2">
                 Start learning
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '8px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -121,15 +133,27 @@ export default function WelcomePage() {
 
                   {/* Mock Input Bar bottom */}
                   <div className="mock-input-container">
-                    <div className="mock-input-bar">
-                      <span className="mock-placeholder">Ask Happy Book anything...</span>
-                      <div className="mock-send-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="22" y1="2" x2="11" y2="13"></line>
-                          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
+                    {!promptText ? (
+                      <form className="mock-input-bar" onSubmit={handlePromptSubmit}>
+                        <input
+                          type="text"
+                          className="mock-input"
+                          placeholder="Ask Happy Book anything..."
+                          value={promptText}
+                          onChange={(e) => setPromptText(e.target.value)}
+                        />
+                        <button type="submit" className="mock-send-btn" disabled={!promptText.trim()}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                          </svg>
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="w-full flex justify-center pb-4 cursor-pointer" onClick={() => setPromptText('')}>
+                        <RadixProgressDemo />
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -181,6 +205,17 @@ export default function WelcomePage() {
               <p className="feature-desc">Keep all your course materials, notes, and deadlines perfectly organized by subject.</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="faq-section py-24 mb-12">
+        <div className="section-container flex flex-col items-center max-w-[800px] w-full mx-auto px-6">
+          <div className="text-center mb-12">
+             <h2 className="section-title">Frequently Asked Questions</h2>
+             <p className="section-subtitle">Got questions? We've got answers.</p>
+          </div>
+          <RadixAccordionDemo />
         </div>
       </section>
 
@@ -657,8 +692,15 @@ export default function WelcomePage() {
           box-shadow: 0 8px 24px -8px rgba(0,0,0,0.08);
         }
 
-        .mock-placeholder {
+        .mock-input {
+          flex: 1;
           font-size: 13px;
+          color: var(--on-surface);
+          background: transparent;
+          border: none;
+          outline: none;
+        }
+        .mock-input::placeholder {
           color: var(--on-surface-variant);
           opacity: 0.6;
         }
@@ -672,6 +714,13 @@ export default function WelcomePage() {
           display: flex;
           align-items: center;
           justify-content: center;
+          border: none;
+          cursor: pointer;
+          transition: opacity 0.2s;
+        }
+        .mock-send-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
 
         .pulsing-circles {

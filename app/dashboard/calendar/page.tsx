@@ -1,158 +1,122 @@
 "use client";
 
 import { useState } from 'react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock } from 'lucide-react';
 
 export default function CalendarPage() {
     const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 
-    // Generating a simple current month view
+    // Generating a simple current month view for mock purposes
     const days = Array.from({ length: 30 }, (_, i) => i + 1);
     const assignments = [
-        { id: 1, title: "Calculus Problem Set", date: 15, type: "exam", color: "#e54d2e" },
-        { id: 2, title: "Biology Lab Report", date: 15, type: "assignment", color: "#ffa500" },
-        { id: 3, title: "History Essay", date: 18, type: "assignment", color: "#00b5ad" },
-        { id: 4, title: "Physics Quiz", date: 22, type: "exam", color: "#e54d2e" },
+        { id: 1, title: "Calculus Problem Set", date: 15, type: "exam", color: "bg-red-500" },
+        { id: 2, title: "Biology Lab Report", date: 15, type: "assignment", color: "bg-orange-500" },
+        { id: 3, title: "History Essay", date: 18, type: "assignment", color: "bg-teal-500" },
+        { id: 4, title: "Physics Quiz", date: 22, type: "exam", color: "bg-red-500" },
     ];
 
     const upcomingEvents = assignments.filter(a => a.date >= selectedDate);
+    const selectedDateEvents = assignments.filter(a => a.date === selectedDate);
+    const futureEvents = upcomingEvents.filter(a => a.date !== selectedDate);
 
     return (
-        <div className="calendar-page">
-            <div className="calendar-grid">
-                <section className="main-cal card">
-                    <div className="cal-header">
-                        <h2>November 2024</h2>
-                        <div className="cal-nav">
-                            <button>←</button>
-                            <button>→</button>
+        <div className="flex flex-col lg:flex-row gap-6 h-full w-full max-w-7xl mx-auto">
+            {/* Main Calendar Section */}
+            <section className="flex-1 bg-card border border-border/50 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col gap-6">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                        <CalendarIcon className="w-6 h-6 text-primary" />
+                        November 2024
+                    </h2>
+                    <div className="flex gap-2">
+                        <button className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors border border-border/50 text-zinc-600 dark:text-zinc-400">
+                            <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors border border-border/50 text-zinc-600 dark:text-zinc-400">
+                            <ChevronRight className="w-5 h-5" />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-7 gap-2">
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => (
+                        <div key={d} className="text-center text-sm font-semibold text-zinc-500 pb-4 uppercase tracking-wider">
+                            {d}
+                        </div>
+                    ))}
+                    
+                    {/* Blank start days for alignment simulation */}
+                    <div className="aspect-square"></div>
+                    <div className="aspect-square"></div>
+
+                    {days.map(d => {
+                        const hasEvents = assignments.some(a => a.date === d);
+                        const isSelected = selectedDate === d;
+                        
+                        return (
+                            <button
+                                key={d}
+                                onClick={() => setSelectedDate(d)}
+                                className={`group relative aspect-square flex flex-col items-center justify-center rounded-2xl text-lg font-medium transition-all ${
+                                    isSelected 
+                                        ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-105 z-10' 
+                                        : 'bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border border-border/50'
+                                }`}
+                            >
+                                <span>{d}</span>
+                                {hasEvents && (
+                                    <div className={`absolute bottom-2 w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-primary-foreground' : 'bg-red-500'}`} />
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+            </section>
+
+            {/* Side Panel for Events */}
+            <section className="w-full lg:w-[380px] flex flex-col gap-6">
+                <div className="bg-card border border-border/50 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
+                    <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">Events for Nov {selectedDate}</h3>
+                    
+                    {selectedDateEvents.length > 0 ? (
+                        <div className="flex flex-col gap-3">
+                            {selectedDateEvents.map(evt => (
+                                <div key={evt.id} className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
+                                    <div className={`w-1.5 h-12 rounded-full ${evt.color}`} />
+                                    <div className="flex flex-col gap-1">
+                                        <h4 className="font-bold text-zinc-900 dark:text-zinc-100">{evt.title}</h4>
+                                        <span className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                                            <Clock className="w-3.5 h-3.5" />
+                                            10:00 AM • {evt.type}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="p-8 text-center bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-dashed border-border/50 text-zinc-500 text-sm font-medium">
+                            No events scheduled for this day.
+                        </div>
+                    )}
+                </div>
+
+                {futureEvents.length > 0 && (
+                    <div className="bg-card border border-border/50 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
+                        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2">Upcoming Events</h3>
+                        <div className="flex flex-col gap-3 opacity-80">
+                            {futureEvents.map(evt => (
+                                <div key={evt.id} className="flex items-center gap-4 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:opacity-100 transition-all" onClick={() => setSelectedDate(evt.date)}>
+                                    <div className={`w-1 h-8 rounded-full ${evt.color}`} />
+                                    <div className="flex flex-col">
+                                        <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">{evt.title}</h4>
+                                        <span className="text-xs text-zinc-500 font-medium">Nov {evt.date} • {evt.type}</span>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-
-                    <div className="days-grid">
-                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => (
-                            <div key={d} className="day-label">{d}</div>
-                        ))}
-                        {/* Blank start days for alignment simulation */}
-                        <div className="day empty"></div>
-                        <div className="day empty"></div>
-
-                        {days.map(d => {
-                            const hasEvents = assignments.some(a => a.date === d);
-                            return (
-                                <div
-                                    key={d}
-                                    className={`day ${selectedDate === d ? 'selected' : ''} ${hasEvents ? 'has-event' : ''}`}
-                                    onClick={() => setSelectedDate(d)}
-                                >
-                                    <span className="day-num">{d}</span>
-                                    {hasEvents && <div className="dot" />}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </section>
-
-                <section className="side-panel">
-                    <div className="card event-list">
-                        <h3>Events for Nov {selectedDate}</h3>
-                        {upcomingEvents.length > 0 ? (
-                            <ul className="events">
-                                {assignments.filter(a => a.date === selectedDate).map(evt => (
-                                    <li key={evt.id} className="event-item">
-                                        <div className="evt-mark" style={{ background: evt.color }} />
-                                        <div>
-                                            <h4>{evt.title}</h4>
-                                            <span>10:00 AM • {evt.type}</span>
-                                        </div>
-                                    </li>
-                                ))}
-                                {assignments.filter(a => a.date === selectedDate).length === 0 && (
-                                    <p className="empty-msg">No events for this day.</p>
-                                )}
-                            </ul>
-                        ) : (
-                            <p className="empty-msg">Select a date to view events.</p>
-                        )}
-
-                        <h3 className="sub-header">Upcoming</h3>
-                        <ul className="events upcoming">
-                            {upcomingEvents.filter(a => a.date !== selectedDate).map(evt => (
-                                <li key={evt.id} className="event-item faded">
-                                    <div className="evt-mark" style={{ background: evt.color }} />
-                                    <div>
-                                        <h4>{evt.title}</h4>
-                                        <span>Nov {evt.date} • {evt.type}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </section>
-            </div>
-
-            <style jsx>{`
-        .calendar-page { height: 100%; }
-        .calendar-grid {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 24px;
-          height: 100%;
-        }
-
-        .card {
-          background: var(--card);
-          padding: 24px;
-          border-radius: 20px;
-          box-shadow: var(--shadow);
-          border: 1px solid rgba(0,0,0,0.03);
-        }
-
-        /* Calendar Styles */
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .cal-header h2 { margin: 0; font-size: 24px; }
-        .cal-nav button { padding: 8px 16px; border-radius: 8px; background: var(--surface); color: var(--on-surface); font-weight: bold; cursor: pointer; }
-
-        .days-grid {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-          gap: 8px;
-        }
-        .day-label { text-align: center; color: var(--on-surface-variant); font-weight: 600; font-size: 14px; padding-bottom: 8px; }
-        
-        .day {
-          aspect-ratio: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          border-radius: 12px;
-          cursor: pointer;
-          position: relative;
-          font-weight: 600;
-          transition: all 0.2s;
-        }
-        .day:hover { background: var(--surface); }
-        .day.selected { background: var(--primary); color: var(--on-primary); }
-        .dot { width: 6px; height: 6px; background: var(--error); border-radius: 50%; position: absolute; bottom: 8px; }
-        .day.selected .dot { background: var(--on-primary); }
-
-        /* Side Panel */
-        .event-list h3 { margin: 0 0 16px; font-size: 18px; }
-        .sub-header { margin: 24px 0 16px; font-size: 16px; color: var(--on-surface-variant); }
-        .events { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
-        
-        .event-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: var(--surface); }
-        .evt-mark { width: 4px; height: 32px; border-radius: 2px; }
-        .event-item h4 { margin: 0 0 4px; font-size: 15px; }
-        .event-item span { font-size: 12px; color: var(--on-surface-variant); display: block; text-transform: capitalize; }
-        
-        .empty-msg { color: var(--on-surface-variant); font-style: italic; }
-        .faded { opacity: 0.7; }
-
-        @media (max-width: 900px) {
-          .calendar-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
+                )}
+            </section>
         </div>
     );
 }
