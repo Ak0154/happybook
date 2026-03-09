@@ -11,11 +11,15 @@ export default function WelcomePage() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [promptText, setPromptText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePromptSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!promptText.trim()) return;
-    router.push(`/signup?prompt=${encodeURIComponent(promptText.trim())}`);
+    setIsSubmitting(true);
+    setTimeout(() => {
+        router.push(`/signup?prompt=${encodeURIComponent(promptText.trim())}`);
+    }, 2800); // Wait for the progress demo to fill up
   };
 
   useEffect(() => {
@@ -133,7 +137,7 @@ export default function WelcomePage() {
 
                   {/* Mock Input Bar bottom */}
                   <div className="mock-input-container">
-                    {!promptText ? (
+                    {!isSubmitting ? (
                       <form className="mock-input-bar" onSubmit={handlePromptSubmit}>
                         <input
                           type="text"
@@ -150,7 +154,7 @@ export default function WelcomePage() {
                         </button>
                       </form>
                     ) : (
-                      <div className="w-full flex justify-center pb-4 cursor-pointer" onClick={() => setPromptText('')}>
+                      <div className="w-full flex justify-center pb-4 cursor-default">
                         <RadixProgressDemo />
                       </div>
                     )}
