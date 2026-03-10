@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Search } from 'lucide-react';
 
 export default function CalendarPage() {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+    const [searchTerm, setSearchTerm] = useState('');
 
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
@@ -35,8 +36,13 @@ export default function CalendarPage() {
         { id: 4, title: "Physics Quiz", date: 22, type: "exam", color: "bg-red-500" },
     ];
 
-    const upcomingEvents = assignments.filter(a => a.date >= selectedDate);
-    const selectedDateEvents = assignments.filter(a => a.date === selectedDate);
+    const filteredAssignments = assignments.filter(a => 
+        a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        a.type.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const upcomingEvents = filteredAssignments.filter(a => a.date >= selectedDate);
+    const selectedDateEvents = filteredAssignments.filter(a => a.date === selectedDate);
     const futureEvents = upcomingEvents.filter(a => a.date !== selectedDate);
 
     return (
@@ -70,7 +76,7 @@ export default function CalendarPage() {
                     ))}
 
                     {days.map(d => {
-                         const hasEvents = assignments.some(a => a.date === d);
+                         const hasEvents = filteredAssignments.some(a => a.date === d);
                          const isSelected = selectedDate === d;
                          const isToday = d === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
                          
@@ -96,6 +102,17 @@ export default function CalendarPage() {
 
             {/* Side Panel for Events */}
             <section className="w-full lg:w-[380px] flex flex-col gap-6">
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50 text-foreground" />
+                    <input 
+                        type="text" 
+                        placeholder="Search events or types..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3.5 bg-card border border-border/50 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all text-foreground shadow-sm placeholder:opacity-50 text-[15px]"
+                    />
+                </div>
+
                 <div className="bg-card border border-border/50 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
                     <h3 className="text-xl font-bold text-foreground mb-2">Events for {currentMonth.toLocaleString('default', { month: 'short' })} {selectedDate}</h3>
                     
