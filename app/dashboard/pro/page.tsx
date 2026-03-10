@@ -13,6 +13,10 @@ export default function ProPage() {
         setTimeout(() => {
             setIsProcessing(false);
             setIsSubscribed(true);
+
+            // Update global user state mock
+            localStorage.setItem('happybook-pro', 'true');
+            window.dispatchEvent(new Event('user-updated'));
         }, 2000);
     };
 

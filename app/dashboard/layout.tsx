@@ -114,22 +114,44 @@ const DATA = {
       url: '#',
       icon: Folder,
       items: [
-        { title: 'Summaries', url: '#' },
-        { title: 'Flashcards', url: '#' },
+        { title: 'Summaries', url: '/dashboard/summaries' },
+        { title: 'Flashcards', url: '/dashboard/flashcards' },
       ],
     },
   ],
   projects: [
-    { name: 'Biology 101 Midterm', url: '#', icon: Frame },
-    { name: 'History Essay', url: '#', icon: Map },
-    { name: 'Calculus Finals', url: '#', icon: PieChart },
+    { name: 'Biology 101 Midterm', url: '/dashboard/subjects', icon: Frame },
+    { name: 'History Essay', url: '/dashboard/subjects', icon: Map },
+    { name: 'Calculus Finals', url: '/dashboard/subjects', icon: PieChart },
   ],
 };
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
+
+  const [userData, setUserData] = React.useState(DATA.user);
   const [activeTeam, setActiveTeam] = React.useState(DATA.teams[0]);
+
+  React.useEffect(() => {
+    const syncUser = () => {
+      const stored = localStorage.getItem('happybook-user');
+      if (stored) {
+        setUserData(JSON.parse(stored));
+      }
+      const isPro = localStorage.getItem('happybook-pro') === 'true';
+      if (isPro) {
+        DATA.teams[1].plan = 'Pro Active';
+        setActiveTeam(DATA.teams[1]); // Switch to Pro visually
+      } else {
+        DATA.teams[1].plan = 'Upgrade Now';
+        setActiveTeam(DATA.teams[0]); // Switch to Standard visually
+      }
+    };
+    syncUser();
+    window.addEventListener('user-updated', syncUser);
+    return () => window.removeEventListener('user-updated', syncUser);
+  }, []);
 
   // Derive current page name from pathname
   const getCurrentPageName = () => {
@@ -145,7 +167,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!activeTeam) return null;
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <Sidebar collapsible="icon" className="border-r border-zinc-800/50">
         <SidebarHeader>
           {/* Team Switcher */}
@@ -157,7 +179,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     size="lg"
                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   >
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-white shadow-lg">
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg">
                       <activeTeam.logo className="size-4" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
@@ -172,7 +194,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg transition-all duration-200"
                   align="start"
                   side={isMobile ? 'bottom' : 'right'}
                   sideOffset={4}
@@ -273,17 +295,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       side={isMobile ? 'bottom' : 'right'}
                       align={isMobile ? 'end' : 'start'}
                     >
-                      <DropdownMenuItem>
-                        <Folder className="text-muted-foreground" />
-                        <span>View Project</span>
+                      <DropdownMenuItem asChild>
+                        <Link href={item.url} className="flex items-center w-full cursor-pointer">
+                          <Folder className="text-muted-foreground w-4 h-4 mr-2" />
+                          <span>View Project</span>
+                        </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Forward className="text-muted-foreground" />
+                      <DropdownMenuItem className="cursor-pointer">
+                        <Forward className="text-muted-foreground w-4 h-4 mr-2" />
                         <span>Share Project</span>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Trash2 className="text-muted-foreground" />
+                      <DropdownMenuItem className="cursor-pointer text-red-500 hover:text-red-600 focus:text-red-600 focus:bg-red-500/10">
+                        <Trash2 className="w-4 h-4 mr-2" />
                         <span>Delete Project</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -319,17 +343,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">
-                        {DATA.user.name}
+                        {userData.name}
                       </span>
                       <span className="truncate text-xs">
-                        {DATA.user.email}
+                        {userData.email}
                       </span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg transition-all duration-200"
                   side={isMobile ? 'bottom' : 'right'}
                   align="end"
                   sideOffset={4}
@@ -338,19 +362,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage
-                          src={DATA.user.avatar}
-                          alt={DATA.user.name}
+                          src={userData.avatar}
+                          alt={userData.name}
                         />
                         <AvatarFallback className="rounded-lg">
-                          ST
+                          {userData.name.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">
-                          {DATA.user.name}
+                          {userData.name}
                         </span>
                         <span className="truncate text-xs">
-                          {DATA.user.email}
+                          {userData.email}
                         </span>
                       </div>
                     </div>
@@ -402,7 +426,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b border-border">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger className="-ml-1 text-foreground" title="Toggle Workspace Sidebar" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
