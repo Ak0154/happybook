@@ -18,25 +18,25 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
       {/* Welcome Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 rounded-3xl p-8 sm:p-10 border border-zinc-700/50 shadow-lg text-white">
+      <section className="relative overflow-hidden bg-card rounded-3xl p-8 sm:p-10 shadow-lg text-foreground border border-border/50">
         <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Hello, {userName}! 👋</h1>
-            <p className="text-zinc-300">Ready to conquer your coursework today?</p>
+            <p className="opacity-80">Ready to conquer your coursework today?</p>
           </div>
           
-          <div className="flex items-center gap-4 bg-orange-500/10 border border-orange-500/20 px-6 py-4 rounded-2xl backdrop-blur-md">
-            <Flame className="w-8 h-8 text-orange-500 fill-orange-500/20" />
+          <div className="flex items-center gap-4 bg-surface border border-border/50 px-6 py-4 rounded-2xl shadow-sm">
+            <Flame className="w-8 h-8 text-primary opacity-80" />
             <div className="flex flex-col">
-              <strong className="text-orange-500 text-lg font-bold leadng-none">3 Day Streak</strong>
-              <span className="text-orange-400/80 text-sm font-medium">Keep it up!</span>
+              <strong className="text-primary text-lg font-bold leadng-none">3 Day Streak</strong>
+              <span className="text-primary opacity-80 text-sm font-medium">Keep it up!</span>
             </div>
           </div>
         </div>
         
         {/* Decorative background blobs */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-primary/20 blur-3xl rounded-full mix-blend-screen pointer-events-none"></div>
-        <div className="absolute bottom-0 left-20 -mb-20 w-48 h-48 rounded-full bg-orange-500/20 blur-3xl rounded-full mix-blend-screen pointer-events-none"></div>
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-primary opacity-20 blur-3xl mix-blend-screen pointer-events-none"></div>
+        <div className="absolute bottom-0 left-20 -mb-20 w-48 h-48 rounded-full bg-secondary opacity-30 blur-3xl mix-blend-screen pointer-events-none"></div>
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -45,7 +45,7 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Upcoming Assignments</h2>
+                <h2 className="text-xl font-bold text-foreground">Upcoming Assignments</h2>
             </div>
             <Link href="/dashboard/calendar" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
                 See Calendar <ArrowRight className="w-4 h-4" />
@@ -58,19 +58,19 @@ export default function DashboardPage() {
                 📐
               </div>
               <div className="flex-1 flex flex-col">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Calculus Problem Set</h3>
+                <h3 className="font-semibold text-foreground">Calculus Problem Set</h3>
                 <span className="text-sm text-red-500 font-medium">Due Today, 11:59 PM</span>
               </div>
               <span className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shrink-0 shadow-sm shadow-red-500/20">Urgent</span>
             </div>
 
-            <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50 transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800">
-              <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-700 flex items-center justify-center border border-border/50 shrink-0">
+            <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-2xl bg-surface border border-border/50 transition-all hover:brightness-95">
+              <div className="w-12 h-12 rounded-xl bg-card flex items-center justify-center border border-border/50 shrink-0">
                 🧬
               </div>
               <div className="flex-1 flex flex-col">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Biology Lab Report</h3>
-                <span className="text-sm text-zinc-500 font-medium">Due Tomorrow, 5:00 PM</span>
+                <h3 className="font-semibold text-foreground">Biology Lab Report</h3>
+                <span className="text-sm opacity-60 font-medium">Due Tomorrow, 5:00 PM</span>
               </div>
             </div>
           </div>
@@ -78,13 +78,13 @@ export default function DashboardPage() {
 
         {/* Quick Actions Grid Item */}
         <section className="flex flex-col bg-card border border-border/50 rounded-3xl p-6 sm:p-8 shadow-sm">
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">Quick Actions</h2>
+          <h2 className="text-xl font-bold text-foreground mb-6">Quick Actions</h2>
           <div className="flex flex-col gap-3 h-full justify-center">
-            <button className="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 border border-border/50 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all group">
-              <div className="bg-zinc-200 dark:bg-zinc-700 w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 dark:group-hover:bg-zinc-600 transition-colors">
-                  <Plus className="w-5 h-5 text-zinc-700 dark:text-zinc-300" />
+            <button className="flex items-center gap-4 p-4 bg-surface border border-border/50 rounded-2xl hover:brightness-95 transition-all group">
+              <div className="bg-secondary w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-opacity-80 transition-colors">
+                  <Plus className="w-5 h-5 text-secondary-foreground" />
               </div>
-              <span className="font-semibold text-zinc-900 dark:text-zinc-100">Add Task</span>
+              <span className="font-semibold text-foreground">Add Task</span>
             </button>
             <Link href="/dashboard/tutor" className="flex items-center gap-4 p-4 bg-primary text-primary-foreground rounded-2xl shadow-sm hover:opacity-90 hover:-translate-y-0.5 transition-all group border border-primary/20">
               <div className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center">
@@ -100,35 +100,35 @@ export default function DashboardPage() {
       <section className="bg-card border border-border/50 rounded-3xl p-6 sm:p-8 shadow-sm">
         <div className="flex items-center gap-2 mb-8">
             <TrendingUp className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Weekly Focus</h2>
+            <h2 className="text-xl font-bold text-foreground">Weekly Focus</h2>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50">
-                <div className="flex justify-between items-center text-sm font-semibold text-zinc-500 uppercase">
+            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-surface border border-border/50">
+                <div className="flex justify-between items-center text-sm font-semibold opacity-60 uppercase">
                     <span>Mathematics</span>
-                    <span className="text-zinc-900 dark:text-zinc-100">75%</span>
+                    <span className="text-foreground">75%</span>
                 </div>
                 <Progress value={75} className="h-2.5" />
             </div>
-            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50">
-                <div className="flex justify-between items-center text-sm font-semibold text-zinc-500 uppercase">
+            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-surface border border-border/50">
+                <div className="flex justify-between items-center text-sm font-semibold opacity-60 uppercase">
                     <span>Literature</span>
-                    <span className="text-zinc-900 dark:text-zinc-100">90%</span>
+                    <span className="text-foreground">90%</span>
                 </div>
                 <Progress value={90} className="h-2.5" />
             </div>
-            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50">
-                <div className="flex justify-between items-center text-sm font-semibold text-zinc-500 uppercase">
+            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-surface border border-border/50">
+                <div className="flex justify-between items-center text-sm font-semibold opacity-60 uppercase">
                     <span>Chemistry</span>
-                    <span className="text-zinc-900 dark:text-zinc-100">60%</span>
+                    <span className="text-foreground">60%</span>
                 </div>
                 <Progress value={60} className="h-2.5" />
             </div>
-            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-border/50">
-                <div className="flex justify-between items-center text-sm font-semibold text-zinc-500 uppercase">
+            <div className="flex flex-col gap-2 p-5 rounded-2xl bg-surface border border-border/50">
+                <div className="flex justify-between items-center text-sm font-semibold opacity-60 uppercase">
                     <span>Physics</span>
-                    <span className="text-zinc-900 dark:text-zinc-100">45%</span>
+                    <span className="text-foreground">45%</span>
                 </div>
                 <Progress value={45} className="h-2.5" />
             </div>

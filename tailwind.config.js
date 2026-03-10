@@ -17,9 +17,9 @@ module.exports = {
   			'primary-foreground': 'var(--on-primary)',
   			secondary: 'var(--secondary)',
   			'secondary-foreground': 'var(--on-secondary)',
-  			border: 'var(--sidebar-border)',
-  			input: 'var(--sidebar-border)',
-  			ring: 'var(--sidebar-ring)',
+  			border: 'hsl(var(--sidebar-border) / <alpha-value>)',
+  			input: 'hsl(var(--sidebar-border) / <alpha-value>)',
+  			ring: 'hsl(var(--sidebar-ring) / <alpha-value>)',
   			foreground: 'var(--on-surface)',
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',

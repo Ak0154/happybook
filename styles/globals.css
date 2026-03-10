@@ -23,9 +23,9 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark Theme */
-    --background: #09090b;
-    --surface: #09090b;
-    --card: #09090b;
+    --background: #111111;
+    --surface: #111111;
+    --card: #191919;
     --card-foreground: #eeeeee;
     --primary: #ffe0c2;
     --on-primary: #081a1b;

@@ -60,7 +60,7 @@ export default function AiTutorPage() {
                                     <Bot className="w-5 h-5" />
                                 </AvatarFallback>
                             ) : (
-                                <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100">
+                                <AvatarFallback className="bg-surface text-foreground">
                                     <User className="w-5 h-5" />
                                 </AvatarFallback>
                             )}
@@ -68,7 +68,7 @@ export default function AiTutorPage() {
                         
                         <div className={`px-5 py-3.5 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
                             msg.role === 'assistant' 
-                                ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-tl-sm border border-border/50' 
+                                ? 'bg-surface text-foreground rounded-tl-sm border border-border/50' 
                                 : 'bg-primary text-primary-foreground rounded-tr-sm'
                         }`}>
                             {msg.text}
@@ -83,16 +83,16 @@ export default function AiTutorPage() {
                                 <Bot className="w-5 h-5" />
                             </AvatarFallback>
                         </Avatar>
-                        <div className="px-5 py-4 rounded-2xl rounded-tl-sm bg-zinc-100 dark:bg-zinc-800 flex items-center gap-1.5 border border-border/50 shadow-sm">
-                            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.3s]"></span>
-                            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.15s]"></span>
-                            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-bounce"></span>
+                        <div className="px-5 py-4 rounded-2xl rounded-tl-sm bg-surface flex items-center gap-1.5 border border-border/50 shadow-sm">
+                            <span className="w-2 h-2 rounded-full bg-secondary-foreground opacity-50 animate-bounce [animation-delay:-0.3s]"></span>
+                            <span className="w-2 h-2 rounded-full bg-secondary-foreground opacity-50 animate-bounce [animation-delay:-0.15s]"></span>
+                            <span className="w-2 h-2 rounded-full bg-secondary-foreground opacity-50 animate-bounce"></span>
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-border/50">
+            <div className="p-4 bg-surface border-t border-border/50">
                 <form onSubmit={handleSend} className="relative flex items-center w-full max-w-4xl mx-auto">
                     <input
                         type="text"
@@ -100,7 +100,7 @@ export default function AiTutorPage() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         disabled={isTyping}
-                        className="w-full pl-6 pr-14 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-zinc-900 dark:text-zinc-100 disabled:opacity-50"
+                        className="w-full pl-6 pr-14 py-4 rounded-2xl border border-border bg-card shadow-sm outline-none focus:ring-2 focus: focus:border-primary transition-all text-foreground disabled:opacity-50"
                     />
                     <button 
                         type="submit" 
@@ -110,7 +110,7 @@ export default function AiTutorPage() {
                         <Send className="w-5 h-5" />
                     </button>
                 </form>
-                <p className="text-center text-xs text-zinc-500 mt-3 font-medium">
+                <p className="text-center text-xs opacity-60 mt-3 font-medium">
                     AI Tutor can make mistakes. Consider verifying important academic facts.
                 </p>
             </div>
