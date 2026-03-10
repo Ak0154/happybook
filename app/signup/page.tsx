@@ -4,6 +4,15 @@ import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { RadixCheckboxDemo } from '@/components/demo/RadixCheckboxDemo';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/animate-ui/components/radix/checkbox";
 
 export default function SignupPage() {
   return (
@@ -122,11 +131,94 @@ function SignupContent() {
             />
           </div>
 
-          <div className="mt-2 mb-2">
-            <RadixCheckboxDemo 
-              checked={termsAccepted} 
-              onCheckedChange={setTermsAccepted} 
-            />
+          <div className="mt-2 mb-4 flex items-center justify-between">
+            <span className="text-sm text-[var(--on-surface-variant)]">
+              {termsAccepted ? (
+                <span className="text-[#34A853] font-medium flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  Terms and Conditions accepted
+                </span>
+              ) : (
+                "You must agree to our terms of service."
+              )}
+            </span>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <button type="button" className="text-sm font-semibold text-[var(--primary)] hover:underline outline-none">
+                  Read Terms
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px] border border-[var(--sidebar-border)] bg-[var(--background)] text-[var(--on-surface)] rounded-2xl p-0 overflow-hidden flex flex-col max-h-[85vh]">
+                <DialogHeader className="p-6 pb-4 border-b border-[var(--sidebar-border)]">
+                  <DialogTitle className="text-xl font-bold">Terms and Conditions</DialogTitle>
+                </DialogHeader>
+                
+                <div className="flex-1 overflow-y-auto p-6 text-sm text-[var(--on-surface-variant)] leading-relaxed space-y-4 custom-scrollbar">
+                  <p>
+                    <strong>1. Acceptance of Terms</strong><br/>
+                    By accessing or using the Happy Book platform, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you disagree with any part of the terms, you may not access the service.
+                  </p>
+                  <p>
+                    <strong>2. User Accounts</strong><br/>
+                    When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account.
+                  </p>
+                  <p>
+                    <strong>3. Acceptable Use</strong><br/>
+                    You agree not to use the platform for any illegal activities or to violate any laws in your jurisdiction. The AI Tutor features are built to assist your learning process and should be used ethically for supplementary education.
+                  </p>
+                  <p>
+                    <strong>4. Intellectual Property</strong><br/>
+                    The Service and its original content, features, and functionality are and will remain the exclusive property of Happy Book and its licensors.
+                  </p>
+                  <p>
+                    <strong>5. Limitation of Liability</strong><br/>
+                    In no event shall Happy Book or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on our platform.
+                  </p>
+                  <p>
+                    <strong>6. Changes to Terms</strong><br/>
+                    We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.
+                  </p>
+                </div>
+
+                <div className="p-6 border-t border-[var(--sidebar-border)] bg-[var(--surface)] flex flex-col gap-5">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox id="read-terms" className="border-2 border-[var(--on-surface-variant)] data-[state=checked]:bg-[var(--primary)] data-[state=checked]:border-[var(--primary)]" />
+                    <label htmlFor="read-terms" className="text-sm font-medium leading-none text-[var(--on-surface)]">
+                      I have completely read and understood all the terms and conditions outlined above.
+                    </label>
+                  </div>
+                  <div className="flex justify-end gap-3 pt-2">
+                    <DialogClose asChild>
+                      <button 
+                        type="button" 
+                        onClick={() => setTermsAccepted(false)}
+                        className="px-4 py-2 rounded-xl text-sm font-medium border border-[var(--sidebar-border)] text-[var(--on-surface)] hover:bg-[var(--card)] transition-colors"
+                      >
+                        Decline
+                      </button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          const checkbox = document.getElementById('read-terms') as HTMLButtonElement;
+                          if (checkbox && checkbox.getAttribute('data-state') === 'checked') {
+                            setTermsAccepted(true);
+                          } else {
+                            alert("Please check the box to confirm you have read the terms.");
+                            setTermsAccepted(false);
+                          }
+                        }}
+                        className="px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--on-surface)] text-[var(--background)] hover:opacity-90 transition-opacity disabled:opacity-50"
+                      >
+                        Accept Terms
+                      </button>
+                    </DialogClose>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <button type="submit" className="btn-submit" disabled={isLoading || !termsAccepted} style={{ marginTop: '8px' }}>
@@ -380,6 +472,20 @@ function SignupContent() {
         
         .login-footer a:hover {
           text-decoration: underline;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: var(--sidebar-border);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: var(--on-surface-variant);
         }
       `}</style>
     </main>

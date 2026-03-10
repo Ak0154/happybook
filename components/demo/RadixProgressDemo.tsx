@@ -12,12 +12,12 @@ export const RadixProgressDemo = () => {
         if (prev >= 100) return 100;
         return prev + 25;
       });
-    }, 2000);
+    }, 400);
     return () => clearInterval(timer);
   }, []);
 
   React.useEffect(() => {
-    if (progress >= 100) setTimeout(() => setProgress(0), 4000);
+    if (progress >= 100) setTimeout(() => setProgress(0), 1000);
   }, [progress]);
 
   return (

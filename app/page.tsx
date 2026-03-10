@@ -19,7 +19,7 @@ export default function WelcomePage() {
     setIsSubmitting(true);
     setTimeout(() => {
       router.push(`/signup?prompt=${encodeURIComponent(promptText.trim())}`);
-    }, 2800); // Wait for the progress demo to fill up
+    }, 2400); // Wait for the progress demo to fill up fully (1.6s algorithm + 0.5s css animation limit)
   };
 
   useEffect(() => {
