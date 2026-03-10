@@ -4,10 +4,30 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock } from 'lucide-react';
 
 export default function CalendarPage() {
+    const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 
-    // Generating a simple current month view for mock purposes
-    const days = Array.from({ length: 30 }, (_, i) => i + 1);
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+
+    const monthName = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+
+    const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    const blanks = Array.from({ length: firstDayOfMonth }, (_, i) => i);
+
+    const prevMonth = () => {
+        setCurrentMonth(new Date(year, month - 1, 1));
+        setSelectedDate(1);
+    };
+
+    const nextMonth = () => {
+        setCurrentMonth(new Date(year, month + 1, 1));
+        setSelectedDate(1);
+    };
+
     const assignments = [
         { id: 1, title: "Calculus Problem Set", date: 15, type: "exam", color: "bg-red-500" },
         { id: 2, title: "Biology Lab Report", date: 15, type: "assignment", color: "bg-orange-500" },
@@ -26,13 +46,13 @@ export default function CalendarPage() {
                 <div className="flex justify-between items-center">
                     <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
                         <CalendarIcon className="w-6 h-6 text-primary" />
-                        November 2024
+                        {monthName}
                     </h2>
                     <div className="flex gap-2">
-                        <button className="p-2 rounded-xl bg-surface hover:brightness-95 transition-colors border border-border/50 text-foreground">
+                        <button onClick={prevMonth} className="p-2 rounded-xl bg-surface hover:brightness-95 transition-colors border border-border/50 text-foreground">
                             <ChevronLeft className="w-5 h-5" />
                         </button>
-                        <button className="p-2 rounded-xl bg-surface hover:brightness-95 transition-colors border border-border/50 text-foreground">
+                        <button onClick={nextMonth} className="p-2 rounded-xl bg-surface hover:brightness-95 transition-colors border border-border/50 text-foreground">
                             <ChevronRight className="w-5 h-5" />
                         </button>
                     </div>
@@ -45,13 +65,14 @@ export default function CalendarPage() {
                         </div>
                     ))}
                     
-                    {/* Blank start days for alignment simulation */}
-                    <div className="aspect-square"></div>
-                    <div className="aspect-square"></div>
+                    {blanks.map(b => (
+                        <div key={`blank-${b}`} className="aspect-square"></div>
+                    ))}
 
                     {days.map(d => {
                          const hasEvents = assignments.some(a => a.date === d);
                          const isSelected = selectedDate === d;
+                         const isToday = d === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
                          
                          return (
                              <button
@@ -61,7 +82,7 @@ export default function CalendarPage() {
                                      isSelected 
                                          ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-105 z-10' 
                                          : 'bg-surface hover:brightness-95 text-foreground border border-border/50'
-                                 }`}
+                                 } ${isToday && !isSelected ? 'ring-2 ring-primary/50 text-primary' : ''}`}
                              >
                                  <span>{d}</span>
                                  {hasEvents && (
@@ -76,7 +97,7 @@ export default function CalendarPage() {
             {/* Side Panel for Events */}
             <section className="w-full lg:w-[380px] flex flex-col gap-6">
                 <div className="bg-card border border-border/50 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Events for Nov {selectedDate}</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-2">Events for {currentMonth.toLocaleString('default', { month: 'short' })} {selectedDate}</h3>
                     
                     {selectedDateEvents.length > 0 ? (
                         <div className="flex flex-col gap-3">
@@ -109,7 +130,7 @@ export default function CalendarPage() {
                                     <div className={`w-1 h-8 rounded-full ${evt.color}`} />
                                     <div className="flex flex-col">
                                         <h4 className="font-semibold text-sm text-foreground">{evt.title}</h4>
-                                        <span className="text-xs opacity-60 font-medium">Nov {evt.date} • {evt.type}</span>
+                                        <span className="text-xs opacity-60 font-medium">{currentMonth.toLocaleString('default', { month: 'short' })} {evt.date} • {evt.type}</span>
                                     </div>
                                 </div>
                             ))}

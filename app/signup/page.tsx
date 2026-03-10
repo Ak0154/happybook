@@ -475,17 +475,20 @@ function SignupContent() {
         }
 
         .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
+          width: 12px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.1);
+          background: rgba(255, 255, 255, 0.02);
+          border-left: 4px solid var(--background);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: var(--sidebar-border);
+          background: var(--on-surface-variant);
           border-radius: 10px;
+          border: 4px solid var(--background);
+          background-clip: padding-box;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: var(--on-surface-variant);
+          background: var(--on-surface);
         }
       `}</style>
     </main>
