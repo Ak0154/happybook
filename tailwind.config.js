@@ -9,6 +9,18 @@ module.exports = {
   theme: {
   	extend: {
   		colors: {
+  			background: 'var(--background)',
+  			surface: 'var(--surface)',
+  			card: 'var(--card)',
+  			'card-foreground': 'var(--card-foreground)',
+  			primary: 'var(--primary)',
+  			'primary-foreground': 'var(--on-primary)',
+  			secondary: 'var(--secondary)',
+  			'secondary-foreground': 'var(--on-secondary)',
+  			border: 'var(--sidebar-border)',
+  			input: 'var(--sidebar-border)',
+  			ring: 'var(--sidebar-ring)',
+  			foreground: 'var(--on-surface)',
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
   				foreground: 'hsl(var(--sidebar-foreground))',
