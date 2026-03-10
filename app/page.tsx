@@ -18,7 +18,7 @@ export default function WelcomePage() {
     if (!promptText.trim()) return;
     setIsSubmitting(true);
     setTimeout(() => {
-        router.push(`/signup?prompt=${encodeURIComponent(promptText.trim())}`);
+      router.push(`/signup?prompt=${encodeURIComponent(promptText.trim())}`);
     }, 2800); // Wait for the progress demo to fill up
   };
 
@@ -216,8 +216,8 @@ export default function WelcomePage() {
       <section className="faq-section py-24 mb-12">
         <div className="section-container flex flex-col items-center max-w-[800px] w-full mx-auto px-6">
           <div className="text-center mb-12">
-             <h2 className="section-title">Frequently Asked Questions</h2>
-             <p className="section-subtitle">Got questions? We've got answers.</p>
+            <h2 className="section-title">Frequently Asked Questions</h2>
+            <p className="section-subtitle">Got questions? We've got answers.</p>
           </div>
           <RadixAccordionDemo />
         </div>

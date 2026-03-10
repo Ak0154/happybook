@@ -1,31 +1,50 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Send, Bot, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function AiTutorPage() {
-    const [messages, setMessages] = useState([
-        { role: 'assistant', text: "Hello! I'm your AI Tutor. I can help you with math, essay writing, or explaining complex concepts. What are you working on today?" }
-    ]);
+    const defaultMessage = { role: 'assistant', text: "Hello! I'm your AI Tutor. I can help you with math, essay writing, or explaining complex concepts. What are you working on today?" };
+    const [messages, setMessages] = useState<{role: string, text: string}[]>([defaultMessage]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+
+    useEffect(() => {
+        const stored = localStorage.getItem("happybook_tutor_chat");
+        if (stored) {
+            setMessages(JSON.parse(stored));
+        }
+    }, []);
+
+    const saveMessages = (newMessages: {role: string, text: string}[]) => {
+        setMessages(newMessages);
+        localStorage.setItem("happybook_tutor_chat", JSON.stringify(newMessages));
+    };
 
     const handleSend = (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isTyping) return;
 
-        const userMsg = { role: 'user', text: input.trim() };
-        setMessages(prev => [...prev, userMsg]);
+        const userText = input.trim();
+        const userMsg = { role: 'user', text: userText };
+        const updatedMessages = [...messages, userMsg];
+        saveMessages(updatedMessages);
         setInput('');
         setIsTyping(true);
 
+        const mockResponses = [
+            "That's an interesting question! Let's break it down step by step.",
+            "I can definitely help with that. First, consider the core concepts related to your inquiry. What do you think the first step should be?",
+            "Good observation. In a real-world scenario, this often implies that you should look for the underlying pattern.",
+            "I'm here to help! A great way to approach this is to write down what we already know.",
+            `Let's think about "${userText}". Does that sound like a concept you've encountered in your recent lessons?`
+        ];
+
         // Mock AI response delay
         setTimeout(() => {
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                text: "That's an interesting question! Let's break it down step by step. First, consider the core concepts related to your inquiry. What do you think the first step should be?"
-            }]);
+            const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+            saveMessages([...updatedMessages, { role: 'assistant', text: randomResponse }]);
             setIsTyping(false);
         }, 1500);
     };

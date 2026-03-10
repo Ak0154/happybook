@@ -1,7 +1,8 @@
 "use client";
 
-import * as React from 'react';
+import * as React from 'react'; // HMR trigger
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 import {
   Breadcrumb,
