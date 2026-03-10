@@ -357,25 +357,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                      <Sparkles />
-                      Upgrade to Pro
-                    </DropdownMenuItem>
+                    <Link href="/dashboard/pro">
+                      <DropdownMenuItem className="cursor-pointer">
+                        <Sparkles />
+                        Upgrade to Pro
+                      </DropdownMenuItem>
+                    </Link>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                      <BadgeCheck />
-                      Account Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <CreditCard />
-                      Billing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Bell />
-                      Notifications
-                    </DropdownMenuItem>
+                    <Link href="/dashboard/settings">
+                      <DropdownMenuItem className="cursor-pointer">
+                        <BadgeCheck />
+                        Account Settings
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/billing">
+                      <DropdownMenuItem className="cursor-pointer">
+                        <CreditCard />
+                        Billing
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/notifications">
+                      <DropdownMenuItem className="cursor-pointer">
+                        <Bell />
+                        Notifications
+                      </DropdownMenuItem>
+                    </Link>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
