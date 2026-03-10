@@ -133,7 +133,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // Derive current page name from pathname
   const getCurrentPageName = () => {
-    switch(pathname) {
+    switch (pathname) {
       case '/dashboard/subjects': return 'Subjects';
       case '/dashboard/calendar': return 'Calendar';
       case '/dashboard/tutor': return 'AI Tutor';
@@ -399,7 +399,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
+                  <BreadcrumbLink href="/dashboard">
                     Workspace
                   </BreadcrumbLink>
                 </BreadcrumbItem>
