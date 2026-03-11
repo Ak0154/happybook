@@ -12,11 +12,36 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 
+const Typewriter = ({ text, onComplete }: { text: string, onComplete: () => void }) => {
+    const [displayedText, setDisplayedText] = useState("");
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+        if (index < text.length) {
+            const timer = setTimeout(() => {
+                setDisplayedText(prev => prev + text.charAt(index));
+                setIndex(prev => prev + 1);
+            }, 10 + Math.random() * 20); // random speed for natural feel
+            return () => clearTimeout(timer);
+        } else {
+            onComplete();
+        }
+    }, [index, text, onComplete]);
+
+    return (
+        <span>
+            {displayedText}
+            {index < text.length && <span className="inline-block w-1.5 h-4 ml-1 align-middle bg-primary animate-pulse" />}
+        </span>
+    );
+};
+
 export default function AiTutorPage() {
     const defaultMessage = { role: 'assistant', text: "Hello! I'm your AI Tutor. I can help you with math, essay writing, or explaining complex concepts. What are you working on today?" };
-    const [messages, setMessages] = useState<{ role: string, text: string }[]>([defaultMessage]);
+    const [messages, setMessages] = useState<{ role: string, text: string, isNew?: boolean }[]>([defaultMessage]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Mock History
@@ -43,9 +68,20 @@ export default function AiTutorPage() {
         scrollToBottom();
     }, [messages, isTyping]);
 
-    const saveMessages = (newMessages: { role: string, text: string }[]) => {
+    // Keep scrolling to bottom while heavily generating long text
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (isGenerating || isTyping) {
+                scrollToBottom();
+            }
+        }, 100);
+        return () => clearInterval(interval);
+    }, [isGenerating, isTyping]);
+
+    const saveMessages = (newMessages: { role: string, text: string, isNew?: boolean }[]) => {
         setMessages(newMessages);
-        localStorage.setItem("happybook_tutor_chat", JSON.stringify(newMessages));
+        const toSave = newMessages.map(m => ({ role: m.role, text: m.text }));
+        localStorage.setItem("happybook_tutor_chat", JSON.stringify(toSave));
     };
 
     const handleNewChat = () => {
@@ -69,7 +105,7 @@ export default function AiTutorPage() {
 
     const handleSend = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!input.trim() || isTyping) return;
+        if (!input.trim() || isTyping || isGenerating) return;
 
         const userText = input.trim();
         const userMsg = { role: 'user', text: userText };
@@ -89,9 +125,10 @@ export default function AiTutorPage() {
         // Mock AI response delay
         setTimeout(() => {
             const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
-            saveMessages([...updatedMessages, { role: 'assistant', text: randomResponse }]);
+            saveMessages([...updatedMessages, { role: 'assistant', text: randomResponse, isNew: true }]);
             setIsTyping(false);
-        }, 1500);
+            setIsGenerating(true);
+        }, 800);
     };
 
     return (
@@ -198,7 +235,11 @@ export default function AiTutorPage() {
                                 ? 'bg-card text-foreground rounded-tl-sm border border-border/50 shadow-sm flex flex-col gap-2'
                                 : 'bg-primary text-primary-foreground rounded-tr-sm'
                                 }`}>
-                                {msg.text}
+                                {msg.role === 'assistant' && msg.isNew ? (
+                                    <Typewriter text={msg.text} onComplete={() => setIsGenerating(false)} />
+                                ) : (
+                                    msg.text
+                                )}
                             </div>
                         </div>
                     ))}
@@ -227,12 +268,12 @@ export default function AiTutorPage() {
                             placeholder="Message AI Tutor..."
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            disabled={isTyping}
+                            disabled={isTyping || isGenerating}
                             className="bg-card w-full pl-6 pr-16 py-4 rounded-2xl border-2 border-border/50 focus:border-primary/50 focus:outline-none transition-colors text-base text-foreground font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
                         />
                         <button
                             type="submit"
-                            disabled={!input.trim() || isTyping}
+                            disabled={!input.trim() || isTyping || isGenerating}
                             className="absolute right-3 p-2.5 rounded-xl bg-primary text-primary-foreground shadow-sm hover:opacity-90 transition-all disabled:opacity-40 disabled:hover:opacity-40 active:scale-90"
                         >
                             <Send className="w-4 h-4 ml-0.5" />
