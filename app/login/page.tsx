@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ThemeTogglerButton } from '@/components/animate-ui/components/buttons/theme-toggler';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,7 +25,10 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="login-wrapper">
+    <main className="login-wrapper relative">
+      <div className="absolute top-6 right-6 z-50">
+        <ThemeTogglerButton variant="outline" size="md" direction="right" modes={['light', 'dark', 'system']} />
+      </div>
       {/* Decorative background blobs to mimic the image */}
       <div className="bg-blob blob-1"></div>
       <div className="bg-blob blob-2"></div>

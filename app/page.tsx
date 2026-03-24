@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { RadixAccordionDemo } from '@/components/demo/RadixAccordionDemo';
 import { RadixProgressDemo } from '@/components/demo/RadixProgressDemo';
+import { ThemeTogglerButton } from '@/components/animate-ui/components/buttons/theme-toggler';
 
 export default function WelcomePage() {
   const router = useRouter();
@@ -44,7 +45,8 @@ export default function WelcomePage() {
               style={{ marginLeft: '-16px' }}
             />
           </Link>
-          <div className="nav-actions">
+          <div className="nav-actions flex items-center gap-4">
+            <ThemeTogglerButton variant="outline" size="md" direction="right" modes={['light', 'dark', 'system']} />
             <Link href="/login" className="nav-link">Log in</Link>
             <Link href="/signup" className="btn-nav-primary">Get Started</Link>
           </div>

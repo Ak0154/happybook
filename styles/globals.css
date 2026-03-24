@@ -20,23 +20,21 @@
   /* 3E0640 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Theme */
-    --background: #111111;
-    --surface: #111111;
-    --card: #191919;
-    --card-foreground: #eeeeee;
-    --primary: #ffe0c2;
-    --on-primary: #081a1b;
-    --secondary: #393028;
-    --on-secondary: #ffe0c2;
-    --error: #e54d2e;
-    --on-error: #ffffff;
-    --on-surface: #eeeeee;
-    --on-surface-variant: #b4b4b4;
-    --shadow-color: 0, 0, 0;
-  }
+.dark {
+  /* Dark Theme */
+  --background: #111111;
+  --surface: #111111;
+  --card: #191919;
+  --card-foreground: #eeeeee;
+  --primary: #ffe0c2;
+  --on-primary: #081a1b;
+  --secondary: #393028;
+  --on-secondary: #ffe0c2;
+  --error: #e54d2e;
+  --on-error: #ffffff;
+  --on-surface: #eeeeee;
+  --on-surface-variant: #b4b4b4;
+  --shadow-color: 0, 0, 0;
 }
 
 * {
