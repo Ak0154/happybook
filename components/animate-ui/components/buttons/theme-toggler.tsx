@@ -24,16 +24,15 @@ export function ThemeTogglerButton({ variant = "outline", size = "md", direction
         return;
     }
 
-    if (direction === "left" || direction === "right") {
-        document.documentElement.classList.add(`theme-transition-btt`);
-    }
+    const activeDirection = nextTheme === "dark" ? "ttb" : "btt";
+    document.documentElement.classList.add(`theme-transition-${activeDirection}`);
 
     document.startViewTransition(() => {
         if (theme === "dark") setTheme("light");
         else if (theme === "light" && modes.includes("system")) setTheme("system");
         else setTheme("dark");
     }).finished.finally(() => {
-        document.documentElement.classList.remove(`theme-transition-btt`);
+        document.documentElement.classList.remove(`theme-transition-${activeDirection}`);
     });
   };
 

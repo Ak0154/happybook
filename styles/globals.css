@@ -89,12 +89,12 @@ button {
 
 /* Full Page Theme Reveal View Transition */
 ::view-transition-group(root) {
-  animation-duration: 0.7s;
+  animation-duration: 0.84s;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 ::view-transition-new(root) {
-  animation: reveal-ttb 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: reveal-ttb 0.84s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 9999;
 }
 
@@ -104,7 +104,7 @@ button {
 }
 
 .theme-transition-btt::view-transition-new(root) {
-  animation: reveal-btt 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: reveal-btt 0.84s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes reveal-ttb {
