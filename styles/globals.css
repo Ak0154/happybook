@@ -86,3 +86,41 @@ button {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
+/* Full Page Theme Reveal View Transition */
+::view-transition-group(root) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-new(root) {
+  animation: reveal-ttb 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 9999;
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: -1;
+}
+
+.theme-transition-btt::view-transition-new(root) {
+  animation: reveal-btt 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes reveal-ttb {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes reveal-btt {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}

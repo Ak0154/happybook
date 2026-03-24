@@ -205,7 +205,7 @@ export default function DashboardPage() {
                     </div>
                     
                     <div className="flex items-center">
-                        <ThemeTogglerButtonDemo variant="outline" size="md" direction="right" system={true} />
+                        <ThemeTogglerButtonDemo variant="outline" size="md" direction="ttb" system={true} />
                     </div>
                 </div>
                 </div>

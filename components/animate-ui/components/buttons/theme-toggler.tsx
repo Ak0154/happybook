@@ -7,17 +7,34 @@ import { Moon, Sun, Monitor } from "lucide-react";
 export interface ThemeTogglerButtonProps {
   variant?: "outline" | "ghost" | "solid";
   size?: "sm" | "md" | "lg";
-  direction?: "left" | "right";
+  direction?: "left" | "right" | "ttb" | "btt";
   modes?: ("light" | "dark" | "system")[];
 }
 
-export function ThemeTogglerButton({ variant = "outline", size = "md", modes = ['light', 'dark', 'system'] }: ThemeTogglerButtonProps) {
+export function ThemeTogglerButton({ variant = "outline", size = "md", direction = "ttb", modes = ['light', 'dark', 'system'] }: ThemeTogglerButtonProps) {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
-    if (theme === "dark") setTheme("light");
-    else if (theme === "light" && modes.includes("system")) setTheme("system");
-    else setTheme("dark");
+    const nextTheme = theme === "dark" ? "light" : "dark";
+
+    if (!document.startViewTransition) {
+        if (theme === "dark") setTheme("light");
+        else if (theme === "light" && modes.includes("system")) setTheme("system");
+        else setTheme("dark");
+        return;
+    }
+
+    if (direction === "left" || direction === "right") {
+        document.documentElement.classList.add(`theme-transition-btt`);
+    }
+
+    document.startViewTransition(() => {
+        if (theme === "dark") setTheme("light");
+        else if (theme === "light" && modes.includes("system")) setTheme("system");
+        else setTheme("dark");
+    }).finished.finally(() => {
+        document.documentElement.classList.remove(`theme-transition-btt`);
+    });
   };
 
   return (

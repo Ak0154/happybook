@@ -46,7 +46,7 @@ export default function WelcomePage() {
             />
           </Link>
           <div className="nav-actions flex items-center gap-4">
-            <ThemeTogglerButton variant="outline" size="md" direction="right" modes={['light', 'dark', 'system']} />
+            <ThemeTogglerButton variant="outline" size="md" direction="ttb" modes={['light', 'dark', 'system']} />
             <Link href="/login" className="nav-link">Log in</Link>
             <Link href="/signup" className="btn-nav-primary">Get Started</Link>
           </div>

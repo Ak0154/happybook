@@ -53,7 +53,7 @@ function SignupContent() {
   return (
     <main className="login-wrapper relative">
       <div className="absolute top-6 right-6 z-50">
-        <ThemeTogglerButton variant="outline" size="md" direction="right" modes={['light', 'dark', 'system']} />
+        <ThemeTogglerButton variant="outline" size="md" direction="ttb" modes={['light', 'dark', 'system']} />
       </div>
       {/* Decorative background blobs to mimic the image */}
       <div className="bg-blob blob-1"></div>
