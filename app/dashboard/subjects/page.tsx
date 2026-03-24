@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from 'react';
 import { Progress } from "@/components/animate-ui/components/radix/progress";
 import { Plus, MoreVertical, BookOpen, Trash2 } from "lucide-react";
@@ -10,7 +9,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-
 const initialSubjects = [
     { id: 1, name: "Mathematics", progress: 75, nextLesson: "Integration Rules", icon: "📐" },
     { id: 2, name: "Physics", progress: 45, nextLesson: "Quantum Mechanics", icon: "⚛️" },
@@ -18,13 +16,11 @@ const initialSubjects = [
     { id: 4, name: "History", progress: 30, nextLesson: "World War II", icon: "📜" },
     { id: 5, name: "Literature", progress: 90, nextLesson: "Shakespeare's Sonnets", icon: "📖" },
 ];
-
 export default function SubjectsPage() {
     const [subjects, setSubjects] = useState(initialSubjects);
     const [isOpen, setIsOpen] = useState(false);
     const [newSubName, setNewSubName] = useState("");
     const [newSubIcon, setNewSubIcon] = useState("📚");
-
     useEffect(() => {
         const stored = localStorage.getItem("happybook_subjects");
         if (stored) {
@@ -33,7 +29,6 @@ export default function SubjectsPage() {
             localStorage.setItem("happybook_subjects", JSON.stringify(initialSubjects));
         }
     }, []);
-
     const handleAddSubject = (e: React.FormEvent) => {
         e.preventDefault();
         if (!newSubName.trim()) return;

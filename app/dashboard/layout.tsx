@@ -106,7 +106,6 @@ const DATA = {
         { title: 'Home', url: '/dashboard' },
         { title: 'Subjects', url: '/dashboard/subjects' },
         { title: 'Calendar', url: '/dashboard/calendar' },
-        { title: 'AI Tutor', url: '/dashboard/tutor' },
       ],
     },
     {

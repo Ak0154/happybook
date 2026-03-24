@@ -1,16 +1,11 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
-
 export default function DashboardTemplate({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Reset loading state on every navigation
         setIsLoading(true);
-
-        // Force a 1.3s minimum loading animation when switching routes in the dashboard
         const timer = setTimeout(() => {
             setIsLoading(false);
         }, 1300);
