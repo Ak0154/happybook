@@ -1,0 +1,83 @@
+HAPPY BOOK - BACKEND INTEGRATION & FRAMEWORK GUIDE
+=================================================
+
+Hi! This document breaks down exactly how the Happy Book frontend is configured, 
+and what you'll need to do to successfully wire it up to your backend.
+
+---
+
+[1] FRAMEWORK OVERVIEW
+======================
+• Core Stack: Next.js 14 (App Router) + React + TypeScript
+• Styling: Tailwind CSS & Standard CSS Variables for dynamic Dark/Light modes.
+• UI Components: Heavily customized Shadcn/Radix primitives (Dialogs, Progress Bars).
+• Theming Engine: NextThemes wrapped around a custom View Transitions API for 
+  seamless, massive 0.84s "wipe" animations across the DOM when toggling light/dark.
+• Icons: Lucide-React.
+
+The frontend is currently fully decoupled from any database or network request. 
+It relies heavily on "localStorage" to act as a mock database and "setTimeout" 
+to fake network latency.
+
+---
+
+[2] ROUTING ARCHITECTURE
+========================
+The app uses the Next.js `app/` directory paradigm.
+• /app/page.tsx (Landing Page)
+• /app/login/page.tsx (Auth login mask)
+• /app/signup/page.tsx (Auth registration mask)
+• /app/dashboard/... (The primary unified dashboard layout)
+
+In Next.js App Router, every `layout.tsx` persists UI components (like Sidebars), 
+while `page.tsx` renders the isolated route content. I have also implemented an 
+`app/dashboard/template.tsx` which forcefully intercepts route clicks inside the 
+dashboard to trigger a smooth 1.3-second animated loading spinner before rendering pages.
+
+---
+
+[3] SPECIFIC INTEGRATION POINTS FOR THE BACKEND
+================================================
+
+A. AUTHENTICATION & LOGIN/SIGNUP
+Currently, pressing "Submit" on `/login` or `/signup` triggers a fake 1000ms timer 
+that saves a mock token directly into `localStorage.setItem('auth_token', 'mock_token_123')`.
+
+*Your Task*: 
+Replace the `handleSubmit` functions inside `app/login/page.tsx` and `app/signup/page.tsx`.
+Wire them to your backend (e.g. POST /api/auth/login). Return a JWT and store it securely 
+in an HttpOnly cookie or React Context.
+
+B. USER STATE & PROFILES
+The Sidebar in `app/dashboard/layout.tsx` displays the user's name and plan (Pro vs Free). 
+Currently, it listens for a browser window event (`user-updated`) and reads from `localStorage`.
+
+*Your Task*:
+Fetch user data globally using Server Components or a hook (like React Query) 
+hitting your GET `/api/user/me` endpoint. Feed that JSON cleanly into the 
+`activeTeam` and `userData` state variables inside the Layout.
+
+C. THE AI CHATBOT (DASHBOARD/TUTOR)
+The primary landing dashboard (`app/dashboard/page.tsx`) now serves as the AI Tutor.
+Currently, when a user types a message, the app pushes it into a React Array, waits 800ms, 
+and returns a random pre-written raw String from an array (`mockResponses`).
+
+*Your Task*:
+1. Stream Responses: Connect `handleSend` to your LLM proxy via WebSockets or Server-Sent Events.
+2. The `Typewriter` component in the file already handles character-by-character rendering 
+   and isolates markdown code blocks (` ```tsx `) into beautiful macOS-styled mock windows automatically. 
+   Just pass your raw string or string chunks to `setMessages`.
+3. Swap `localStorage.setItem("happybook_tutor_chat")` for a Postgres/Mongo REST GET/POST for history.
+
+D. DASHBOARD WIDGET OVERVIEW
+Inside the AI Tutor sidebar, there is a "My Dashboard Overview" button. It opens a modal 
+containing Progress Bars, Deadlines, and a 3-Day Streak counter.
+
+*Your Task*:
+These layout nodes are statically coded in the `<DialogContent>` portion of `app/dashboard/page.tsx`. 
+You need to map these over an API (e.g. GET `/api/student/dashboard`) so that `Progress value={75}` 
+becomes `Progress value={data.mathProgress}`.
+
+---
+
+Let the frontend team know if you need any specific data schemas reformatted before sending your JSON!

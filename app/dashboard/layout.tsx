@@ -13,6 +13,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
+import { ThemeTogglerButton } from '@/components/animate-ui/components/buttons/theme-toggler';
 import {
   SidebarProvider,
   SidebarInset,
@@ -90,11 +91,6 @@ const DATA = {
       logo: BookOpen,
       plan: 'Student Plan',
     },
-    {
-      name: 'Happy Book Pro',
-      logo: Sparkles,
-      plan: 'Upgrade Now',
-    },
   ],
   navMain: [
     {
@@ -104,24 +100,9 @@ const DATA = {
       isActive: true,
       items: [
         { title: 'Home', url: '/dashboard' },
-        { title: 'Subjects', url: '/dashboard/subjects' },
         { title: 'Calendar', url: '/dashboard/calendar' },
       ],
     },
-    {
-      title: 'Saved Materials',
-      url: '#',
-      icon: Folder,
-      items: [
-        { title: 'Summaries', url: '/dashboard/summaries' },
-        { title: 'Flashcards', url: '/dashboard/flashcards' },
-      ],
-    },
-  ],
-  projects: [
-    { name: 'Biology 101 Midterm', url: '/dashboard/subjects', icon: Frame },
-    { name: 'History Essay', url: '/dashboard/subjects', icon: Map },
-    { name: 'Calculus Finals', url: '/dashboard/subjects', icon: PieChart },
   ],
 };
 
@@ -138,14 +119,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (stored) {
         setUserData(JSON.parse(stored));
       }
-      const isPro = localStorage.getItem('happybook-pro') === 'true';
-      if (isPro) {
-        DATA.teams[1].plan = 'Pro Active';
-        setActiveTeam(DATA.teams[1]); // Switch to Pro visually
-      } else {
-        DATA.teams[1].plan = 'Upgrade Now';
-        setActiveTeam(DATA.teams[0]); // Switch to Standard visually
-      }
     };
     syncUser();
     window.addEventListener('user-updated', syncUser);
@@ -155,7 +128,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Derive current page name from pathname
   const getCurrentPageName = () => {
     switch (pathname) {
-      case '/dashboard/subjects': return 'Subjects';
       case '/dashboard/calendar': return 'Calendar';
       case '/dashboard/tutor': return 'AI Tutor';
       case '/dashboard':
@@ -172,59 +144,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Team Switcher */}
           <SidebarMenu>
             <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton
-                    size="lg"
-                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                  >
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg">
-                      <activeTeam.logo className="size-4" />
-                    </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold tracking-tight">
-                        {activeTeam.name}
-                      </span>
-                      <span className="truncate text-xs opacity-70">
-                        {activeTeam.plan}
-                      </span>
-                    </div>
-                    <ChevronsUpDown className="ml-auto opacity-50" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg transition-all duration-200"
-                  align="start"
-                  side={isMobile ? 'bottom' : 'right'}
-                  sideOffset={4}
-                >
-                  <DropdownMenuLabel className="text-xs text-muted-foreground">
-                    Plans & Teams
-                  </DropdownMenuLabel>
-                  {DATA.teams.map((team, index) => (
-                    <DropdownMenuItem
-                      key={team.name}
-                      onClick={() => setActiveTeam(team)}
-                      className="gap-2 p-2"
-                    >
-                      <div className="flex size-6 items-center justify-center rounded-sm border">
-                        <team.logo className="size-4 shrink-0" />
-                      </div>
-                      {team.name}
-                      <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="gap-2 p-2">
-                    <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                      <Plus className="size-4" />
-                    </div>
-                    <div className="font-medium text-muted-foreground">
-                      Create Team Account
-                    </div>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <SidebarMenuButton size="lg" className="hover:bg-transparent focus:bg-transparent active:bg-transparent cursor-default">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg shrink-0">
+                  <activeTeam.logo className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold tracking-tight">
+                    {activeTeam.name}
+                  </span>
+                  <span className="truncate text-xs opacity-70">
+                    {activeTeam.plan}
+                  </span>
+                </div>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
           {/* Team Switcher */}
@@ -270,58 +202,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </SidebarGroup>
           {/* Nav Main */}
 
-          {/* Nav Project */}
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Quick Workspaces</SidebarGroupLabel>
-            <SidebarMenu>
-              {DATA.projects.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction showOnHover>
-                        <MoreHorizontal />
-                        <span className="sr-only">More</span>
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-48 rounded-lg"
-                      side={isMobile ? 'bottom' : 'right'}
-                      align={isMobile ? 'end' : 'start'}
-                    >
-                      <DropdownMenuItem asChild>
-                        <Link href={item.url} className="flex items-center w-full cursor-pointer">
-                          <Folder className="text-muted-foreground w-4 h-4 mr-2" />
-                          <span>View Project</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer">
-                        <Forward className="text-muted-foreground w-4 h-4 mr-2" />
-                        <span>Share Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="cursor-pointer text-red-500 hover:text-red-600 focus:text-red-600 focus:bg-red-500/10">
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        <span>Delete Project</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70">
-                  <MoreHorizontal className="text-sidebar-foreground/70" />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
-          {/* Nav Project */}
+          {/* Nav Project Section Removed */}
         </SidebarContent>
         <SidebarFooter>
           {/* Nav User */}
@@ -380,31 +261,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <Link href="/dashboard/pro">
-                      <DropdownMenuItem className="cursor-pointer">
-                        <Sparkles />
-                        Upgrade to Pro
-                      </DropdownMenuItem>
-                    </Link>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
                     <Link href="/dashboard/settings">
                       <DropdownMenuItem className="cursor-pointer">
                         <BadgeCheck />
                         Account Settings
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link href="/dashboard/billing">
-                      <DropdownMenuItem className="cursor-pointer">
-                        <CreditCard />
-                        Billing
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link href="/dashboard/notifications">
-                      <DropdownMenuItem className="cursor-pointer">
-                        <Bell />
-                        Notifications
                       </DropdownMenuItem>
                     </Link>
                   </DropdownMenuGroup>
@@ -440,6 +300,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+          </div>
+          <div className="flex items-center px-4 ml-auto">
+             <ThemeTogglerButton variant="ghost" size="md" direction="ttb" modes={['light', 'dark', 'system']} />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 lg:p-8">

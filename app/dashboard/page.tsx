@@ -187,32 +187,6 @@ export default function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto h-full">
-            {/* Welcome Banner */}
-            <section className="relative overflow-hidden bg-card rounded-3xl p-6 sm:p-8 shadow-sm text-foreground border border-border/50 shrink-0">
-                <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-                <div>
-                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Hello, {userName}! 👋</h1>
-                    <p className="opacity-80">Ready to conquer your coursework today?</p>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-4 bg-surface border border-border/50 px-6 py-4 rounded-2xl shadow-sm">
-                    <Flame className="w-8 h-8 text-primary opacity-80" />
-                    <div className="flex flex-col">
-                        <strong className="text-primary text-lg font-bold leading-none">3 Day Streak</strong>
-                        <span className="text-primary opacity-80 text-sm font-medium">Keep it up!</span>
-                    </div>
-                    </div>
-                    
-                    <div className="flex items-center">
-                        <ThemeTogglerButtonDemo variant="outline" size="md" direction="ttb" system={true} />
-                    </div>
-                </div>
-                </div>
-                
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-primary/20 blur-3xl mix-blend-screen dark:mix-blend-screen pointer-events-none"></div>
-                <div className="absolute bottom-0 left-20 -mb-20 w-48 h-48 rounded-full bg-secondary/30 blur-3xl mix-blend-screen dark:mix-blend-screen pointer-events-none"></div>
-            </section>
 
             <div className="flex flex-col md:flex-row min-h-[500px] h-full w-full rounded-3xl border border-border/50 bg-card overflow-hidden shadow-sm flex-1 mb-6">
                 {/* Left Sidebar (History & Dashboard Inject) */}

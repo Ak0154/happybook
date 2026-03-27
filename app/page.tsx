@@ -1,9 +1,7 @@
 "use client";
-
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 import { RadixAccordionDemo } from '@/components/demo/RadixAccordionDemo';
 import { RadixProgressDemo } from '@/components/demo/RadixProgressDemo';
 import { ThemeTogglerButton } from '@/components/animate-ui/components/buttons/theme-toggler';
