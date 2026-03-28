@@ -1,17 +1,23 @@
-[project]
+[tool.poetry]
 name = "happybook"
 version = "0.1.0"
-requires-python = ">=3.11"
+description = "Student assistant backend"
+authors = ["your name"]
+package-mode = false
 
-dependencies = [
-    "fastapi",
-    "uvicorn",
-    "motor",
-    "pymongo",
-    "certifi",
-    "passlib[bcrypt]",
-    "python-jose[cryptography]",
-    "python-dotenv",
-    "groq",
-    "pydantic[email]",
-]
+[tool.poetry.dependencies]
+python = ">=3.11"
+fastapi = "*"
+uvicorn = "*"
+motor = "*"
+pymongo = "*"
+certifi = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
+python-dotenv = "*"
+groq = "*"
+pydantic = {extras = ["email"], version = "*"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
