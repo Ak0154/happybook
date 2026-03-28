@@ -3,7 +3,7 @@ from datetime import datetime
 import uuid
 from backend.auth.jwt import get_current_user
 from backend.models.chat import ChatRequest, ChatResponse, HistoryResponse, MessageOut
-from backend.chat.gemini import get_gemini_reply
+from backend.chat.groq import get_groq_reply
 from backend.chat.history import (
     save_message,
     get_session_history,
@@ -28,7 +28,7 @@ async def send_message(
     history = await get_session_history(user_id, session_id)
 
     # Get reply from Gemini
-    reply = await get_gemini_reply(body.message, history)
+    reply = await get_groq_reply(body.message, history)
 
     now = datetime.utcnow()
 
