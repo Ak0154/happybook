@@ -13,7 +13,7 @@ def _prehash(plain: str) -> str:
     return base64.b64encode(digest).decode()
 
 def hash_password(plain: str) -> str:
-    return pwd_context.hash(_prehash(plain))
+    return pwd_context.hash(plain)
 
 def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(_prehash(plain), hashed)
