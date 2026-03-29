@@ -9,8 +9,8 @@ class RegisterRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=6)
-    grade: Optional[str] = None          # e.g. "10th", "B.Tech 2nd year"
-    subject_interests: Optional[list[str]] = []
+    grade: Optional[str] = None
+    subject_interests: Optional[list[str]] = None
 
 class VerifyOTPRequest(BaseModel):
     email: EmailStr
