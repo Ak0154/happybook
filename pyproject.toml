@@ -21,6 +21,7 @@ python-jose = { extras = ["cryptography"], version = "*" }
 python-dotenv = "*"
 groq = "*"
 pydantic = { extras = ["email"], version = "*" }
+sendgrid = "*"
 
 [build-system]
 requires = ["poetry-core"]
